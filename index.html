@@ -7,6 +7,23 @@
   </head>
   <body>
     <script type="text/x-handlebars" data-template-name="todos">
+      <script type="text/x-handlebars" data-template-name="todos/index">
+        <ul id="todo-list">
+          {{#each itemController="todo"}}
+            <li {{bind-attr class="isCompleted:completed isEditing:editing"}}>
+              {{#if isEditing}}
+                <!-- on enter/focus out do event -->
+                {{edit-todo class="edit" value=title focus-out="acceptChanges"
+                                                     insert-newline="acceptChanges"}}
+              {{else}}
+                {{input type="checkbox" checked=isCompleted class="toggle"}}
+                <label {{action "editTodo" on="doubleClick"}}>{{title}}</label><button {{action "removeTodo" }} class="destroy"></button>
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+      </script>
+    
     
       <section id="todoapp">
         <header id="header">
@@ -16,22 +33,7 @@
         </header>
 
         <section id="main">
-          <ul id="todo-list">
-
-            {{#each itemController="todo"}}
-              <li {{bind-attr class="isCompleted:completed isEditing:editing"}}>
-                {{#if isEditing}}
-                  <!-- on enter/focus out do event -->
-                  {{edit-todo class="edit" value=title focus-out="acceptChanges"
-                                                       insert-newline="acceptChanges"}}
-                {{else}}
-                  {{input type="checkbox" checked=isCompleted class="toggle"}}
-                  <label {{action "editTodo" on="doubleClick"}}>{{title}}</label><button {{action "removeTodo" }} class="destroy"></button>
-                {{/if}}
-              </li>
-            {{/each}}
-
-          </ul>
+          {{outlet}}
 
           <input type="checkbox" id="toggle-all">
         </section>
@@ -45,7 +47,7 @@
               <a href="all" class="selected">All</a>
             </li>
             <li>
-              <a href="active">Active</a>
+              {{#link-to "todos.active" activeClass="selected"}}Active{{/link-to}}
             </li>
             <li>
               <a href="completed">Completed</a>
